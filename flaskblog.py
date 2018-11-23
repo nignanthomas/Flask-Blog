@@ -42,6 +42,16 @@ def register():
     return render_template('register.html', form = form, title = 'Flask Blog -- Register')
 
 
+@app.route('/login')
+def login():
+    form = LoginForm()
+
+    return render_template('login.html', form = form, title = 'Flask Blog -- Login')
+
+
+
+
+
 
 
 if __name__ == '__main__':
