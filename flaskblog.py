@@ -1,4 +1,4 @@
-from flask import Flask,render_template,url_for
+from flask import Flask,render_template,url_for,flash,redirect
 from forms import RegistrationForm,LoginForm
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '12345qwerty6789'
@@ -35,10 +35,12 @@ def about():
 
 
 
-@app.route('/register')
+@app.route('/register', methods =['GET','POST'])
 def register():
     form = RegistrationForm()
-
+    if form.validate_on_submit():
+        flash(f'Account created for {form.username.data} !!!', 'success')
+        return redirect(url_for('login'))
     return render_template('register.html', form = form, title = 'Flask Blog -- Register')
 
 
