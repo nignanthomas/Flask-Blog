@@ -15,14 +15,16 @@ from flask_login import login_user,current_user,logout_user,login_required
 @app.route("/")
 @app.route("/home")
 def home():
-    posts = Post.query.all()
+    # posts = Post.query.all()
+    page = request.args.get('page',1,type=int)
+    posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
 
-    return render_template('home.html', posts = posts)
+    return render_template('home.html', posts = posts, title = 'Flask Blog -- Home')
 
 
 @app.route("/about")
 def about():
-    return render_template('about.html', title = 'About')
+    return render_template('about.html', title = 'Flask Blog -- About')
 
 
 
@@ -167,3 +169,17 @@ def delete_post(post_id):
     db.session.commit()
     flash('The post has been deleted!', 'success')
     return redirect(url_for('home'))
+
+
+################################################################################
+@app.route("/user/<string:username>")
+def user_posts(username):
+    # posts = Post.query.all()
+    user = User.query.filter_by(username=username).first_or_404()
+    page = request.args.get('page',1,type=int)
+    #use backslash '\' to break python lines
+    posts = Post.query.filter_by(author=user)\
+                        .order_by(Post.date_posted.desc())\
+                        .paginate(page=page, per_page=5)
+
+    return render_template('user_posts.html', posts = posts, user = user, title = 'Flask Blog -- '+user.username)
