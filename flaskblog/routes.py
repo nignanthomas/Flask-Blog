@@ -90,6 +90,7 @@ def save_picture(form_picture):
     picture_fn = random_hex + f_ext
     picture_path = os.path.join(app.root_path, 'static/photos', picture_fn)
 
+    #Image Resizing Using Pillow Package
     output_size = (125,125)
     i = Image.open(form_picture)
     i.thumbnail(output_size)
